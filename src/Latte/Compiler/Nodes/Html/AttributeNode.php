@@ -11,7 +11,6 @@ namespace Latte\Compiler\Nodes\Html;
 
 use Latte\Compiler\NodeHelpers;
 use Latte\Compiler\Nodes\AreaNode;
-use Latte\Compiler\Nodes\FragmentNode;
 use Latte\Compiler\Nodes\TextNode;
 use Latte\Compiler\Position;
 use Latte\Compiler\PrintContext;
@@ -35,23 +34,14 @@ class AttributeNode extends AreaNode
 			return $res;
 		}
 
-		$res .= "echo '=';";
-		$quote = $this->quote ?? ($this->value instanceof TextNode ? null : '"');
-		$res .= $quote ? 'echo ' . var_export($quote, true) . ';' : '';
-
 		$escaper = $context->beginEscape();
 		$escaper->enterHtmlAttribute(NodeHelpers::toText($this->name));
-		if ($this->value instanceof FragmentNode && $escaper->export() === 'html/attr/url') {
-			foreach ($this->value->children as $child) {
-				$res .= $child->print($context);
-				$escaper->enterHtmlAttribute(null);
-			}
-		} else {
-			$res .= $this->value->print($context);
-		}
-
+		$res .= $context->format(
+			"echo '='; echo %dump; %node echo %0.dump;",
+			$this->quote ?? ($this->value instanceof TextNode ? null : '"'),
+			$this->value,
+		);
 		$context->restoreEscape();
-		$res .= $quote ? 'echo ' . var_export($quote, true) . ';' : '';
 		return $res;
 	}
 

@@ -152,7 +152,7 @@ final class Escaper
 	}
 
 
-	public function enterHtmlAttribute(?string $name = null): void
+	public function enterHtmlAttribute(?string $name, bool $expression = false): void
 	{
 		$this->state = self::HtmlAttribute;
 		$this->subType = '';
@@ -163,8 +163,8 @@ final class Escaper
 				$this->subType = self::JavaScript;
 			} elseif ($name === 'style') {
 				$this->subType = self::Css;
-			} elseif ((in_array($name, ['href', 'src', 'action', 'formaction'], true)
-				|| ($name === 'data' && strcasecmp($this->tag, 'object') === 0))
+			} elseif ($expression && ((in_array($name, ['href', 'src', 'action', 'formaction'], true)
+				|| ($name === 'data' && strcasecmp($this->tag, 'object') === 0)))
 			) {
 				$this->subType = self::Url;
 			}
