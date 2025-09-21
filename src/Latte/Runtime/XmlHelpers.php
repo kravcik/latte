@@ -96,6 +96,12 @@ final class XmlHelpers
 	}
 
 
+	public static function formatAttributeValue(mixed $value): string
+	{
+		return '"' . self::escapeAttr($value) . '"';
+	}
+
+
 	/**
 	 * Checks that the HTML tag name can be changed.
 	 */

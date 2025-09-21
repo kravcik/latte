@@ -4,15 +4,24 @@
 		echo LR\HtmlHelpers::escapeText($el2) /* line %d%:%d% */;
 		echo '
 
-<p val="';
-		echo LR\HtmlHelpers::escapeAttr($xss) /* line %d%:%d% */;
-		echo '" > </p>
-<p onclick="';
-		echo LR\HtmlHelpers::escapeAttr(LR\Helpers::escapeJs($xss)) /* line %d%:%d% */;
-		echo '"> </p>
-<p ONCLICK="';
-		echo LR\HtmlHelpers::escapeAttr(LR\Helpers::escapeJs($xss)) /* line %d%:%d% */;
-		echo '" ';
+<p';
+		if ($ʟ_av = LR\HtmlHelpers::formatAttributeValue($xss)) /* line %d%:%d% */ {
+			echo ' ';
+			echo $ʟ_av === true ? 'val' : 'val=' . $ʟ_av;
+		}
+		echo ' > </p>
+<p';
+		if ($ʟ_av = LR\HtmlHelpers::formatAttributeValue(LR\Helpers::escapeJs($xss))) /* line %d%:%d% */ {
+			echo ' ';
+			echo $ʟ_av === true ? 'onclick' : 'onclick=' . $ʟ_av;
+		}
+		echo '> </p>
+<p';
+		if ($ʟ_av = LR\HtmlHelpers::formatAttributeValue(LR\Helpers::escapeJs($xss))) /* line %d%:%d% */ {
+			echo ' ';
+			echo $ʟ_av === true ? 'ONCLICK' : 'ONCLICK=' . $ʟ_av;
+		}
+		echo ' ';
 		echo LR\HtmlHelpers::escapeTag($xss) /* line %d%:%d% */;
 		echo '> </p>
 
@@ -58,16 +67,22 @@ var prop2 = ';
 
 <p onclick=\'alert(';
 		echo LR\HtmlHelpers::escapeAttr(LR\Helpers::escapeJs($xss)) /* line %d%:%d% */;
-		echo ');alert("hello");\'
- title="';
-		echo LR\HtmlHelpers::escapeAttr($xss) /* line %d%:%d% */;
-		echo '"
+		echo ');alert("hello");\'';
+		if ($ʟ_av = LR\HtmlHelpers::formatAttributeValue($xss)) /* line %d%:%d% */ {
+			echo '
+ ';
+			echo $ʟ_av === true ? 'title' : 'title=' . $ʟ_av;
+		}
+		echo '
  STYLE="color:';
 		echo LR\HtmlHelpers::escapeAttr(LR\Helpers::escapeCss($xss)) /* line %d%:%d% */;
-		echo ';"
- rel="';
-		echo LR\HtmlHelpers::escapeAttr($xss) /* line %d%:%d% */;
-		echo '"
+		echo ';"';
+		if ($ʟ_av = LR\HtmlHelpers::formatAttributeValue($xss)) /* line %d%:%d% */ {
+			echo '
+ ';
+			echo $ʟ_av === true ? 'rel' : 'rel=' . $ʟ_av;
+		}
+		echo '
  onblur="alert(';
 		echo LR\HtmlHelpers::escapeAttr(LR\Helpers::escapeJs($xss)) /* line %d%:%d% */;
 		echo ')"

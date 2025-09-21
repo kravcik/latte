@@ -74,7 +74,7 @@ Assert::match(
 
 
 Assert::contains(
-	'LR\HtmlHelpers::escapeAttr(LR\Filters::safeUrl(($this->filters->upper)($url1)))',
+	'LR\HtmlHelpers::formatAttributeValue(LR\Filters::safeUrl(($this->filters->upper)($url1)))',
 	$latte->compile('<a href="{$url1|upper}"></a>'),
 );
 

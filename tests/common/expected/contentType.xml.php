@@ -71,10 +71,13 @@ var html = ';
 		echo '"\'
  style="color:';
 		echo LR\XmlHelpers::escapeAttr($id) /* line %d%:%d% */;
-		echo ';\'"
- alt="';
-		echo LR\XmlHelpers::escapeAttr($el) /* line %d%:%d% */;
-		echo '"
+		echo ';\'"';
+		if ($ʟ_av = LR\XmlHelpers::formatAttributeValue($el)) /* line %d%:%d% */ {
+			echo '
+ ';
+			echo $ʟ_av === true ? 'alt' : 'alt=' . $ʟ_av;
+		}
+		echo '
  onfocus="alert(';
 		echo LR\XmlHelpers::escapeAttr($el) /* line %d%:%d% */;
 		echo ')"
@@ -119,13 +122,19 @@ var html = ';
 		}
 		echo '"> </p>
 
-<p val="';
-		echo LR\XmlHelpers::escapeAttr($xss) /* line %d%:%d% */;
-		echo '" > </p>
+<p';
+		if ($ʟ_av = LR\XmlHelpers::formatAttributeValue($xss)) /* line %d%:%d% */ {
+			echo ' ';
+			echo $ʟ_av === true ? 'val' : 'val=' . $ʟ_av;
+		}
+		echo ' > </p>
 
-<p onclick="';
-		echo LR\XmlHelpers::escapeAttr($xss) /* line %d%:%d% */;
-		echo '"> </p>
+<p';
+		if ($ʟ_av = LR\XmlHelpers::formatAttributeValue($xss)) /* line %d%:%d% */ {
+			echo ' ';
+			echo $ʟ_av === true ? 'onclick' : 'onclick=' . $ʟ_av;
+		}
+		echo '> </p>
 ';
 	}
 

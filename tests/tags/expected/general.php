@@ -43,9 +43,12 @@ final class Template%a% extends Latte\Runtime\Template
 				echo '
 	<li id="item-';
 				echo LR\HtmlHelpers::escapeAttr($iterator->getCounter()) /* line %d%:%d% */;
-				echo '" class="';
-				echo LR\HtmlHelpers::escapeAttr($iterator->isOdd() ? 'odd' : 'even') /* line %d%:%d% */;
-				echo '">';
+				echo '"';
+				if ($ʟ_av = LR\HtmlHelpers::formatAttributeValue($iterator->isOdd() ? 'odd' : 'even')) /* line %d%:%d% */ {
+					echo ' ';
+					echo $ʟ_av === true ? 'class' : 'class=' . $ʟ_av;
+				}
+				echo '>';
 				echo LR\HtmlHelpers::escapeText($person) /* line %d%:%d% */;
 				echo '</li>
 	';

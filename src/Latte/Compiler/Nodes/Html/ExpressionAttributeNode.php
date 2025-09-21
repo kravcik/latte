@@ -33,11 +33,13 @@ class ExpressionAttributeNode extends AreaNode
 		$escaper = $context->beginEscape();
 		$escaper->enterHtmlAttribute($this->name, expression: true);
 		$res = $context->format(
-			'echo %3.dump; echo %modify(%node) %line; echo \'"\';',
+			'if ($ʟ_av = %modify(%node)) %line { echo %dump; echo $ʟ_av === true ? %dump : %dump . $ʟ_av; } ',
 			$this->modifier,
 			$this->value,
 			$this->value->position,
-			$this->indentation . $this->name . '="',
+			$this->indentation,
+			$this->name,
+			$this->name . '=',
 		);
 		$context->restoreEscape();
 		return $res;

@@ -6,15 +6,23 @@ final class Template%a% extends Latte\Runtime\Template
 	public function main(array $ʟ_args): void
 	{
 %A%
-		echo '<span title="';
-		echo LR\HtmlHelpers::escapeAttr($x) /* line %d%:%d% */;
-		echo '" class="';
-		echo LR\HtmlHelpers::escapeAttr($x) /* line %d%:%d% */;
-		echo '"></span>
+		echo '<span';
+		if ($ʟ_av = LR\HtmlHelpers::formatAttributeValue($x)) /* line %d%:%d% */ {
+			echo ' ';
+			echo $ʟ_av === true ? 'title' : 'title=' . $ʟ_av;
+		}
+		if ($ʟ_av = LR\HtmlHelpers::formatAttributeValue($x)) /* line %d%:%d% */ {
+			echo ' ';
+			echo $ʟ_av === true ? 'class' : 'class=' . $ʟ_av;
+		}
+		echo '></span>
 
-<span title="';
-		echo LR\HtmlHelpers::escapeAttr($x) /* line %d%:%d% */;
-		echo '" ';
+<span';
+		if ($ʟ_av = LR\HtmlHelpers::formatAttributeValue($x)) /* line %d%:%d% */ {
+			echo ' ';
+			echo $ʟ_av === true ? 'title' : 'title=' . $ʟ_av;
+		}
+		echo ' ';
 		echo LR\HtmlHelpers::escapeTag($x) /* line %d%:%d% */;
 		echo '></span>
 
@@ -36,9 +44,12 @@ final class Template%a% extends Latte\Runtime\Template
 		echo LR\HtmlHelpers::escapeAttr($x) /* line %d%:%d% */;
 		echo 'd"></span>
 
-<span onclick="';
-		echo LR\HtmlHelpers::escapeAttr(LR\Helpers::escapeJs($x)) /* line %d%:%d% */;
-		echo '" ';
+<span';
+		if ($ʟ_av = LR\HtmlHelpers::formatAttributeValue(LR\Helpers::escapeJs($x))) /* line %d%:%d% */ {
+			echo ' ';
+			echo $ʟ_av === true ? 'onclick' : 'onclick=' . $ʟ_av;
+		}
+		echo ' ';
 		echo LR\HtmlHelpers::escapeTag($x) /* line %d%:%d% */;
 		echo '></span>
 

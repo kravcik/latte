@@ -126,9 +126,12 @@
 			echo ' ';
 			ob_start(fn() => '');
 			try /* line 22:55 */ {
-				echo '<span class="';
-				echo LR\HtmlHelpers::escapeAttr($i) /* line 22:50 */;
-				echo '"></span>';
+				echo '<span';
+				if ($ʟ_av = LR\HtmlHelpers::formatAttributeValue($i)) /* line 22:50 */ {
+					echo ' ';
+					echo $ʟ_av === true ? 'class' : 'class=' . $ʟ_av;
+				}
+				echo '></span>';
 			} finally {
 				$ʟ_tmp = ob_get_clean();
 			}

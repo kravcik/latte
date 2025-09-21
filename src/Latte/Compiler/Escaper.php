@@ -35,7 +35,8 @@ final class Escaper
 		HtmlBogusTag = 'html/bogus',
 		HtmlRawText = 'html/raw',
 		HtmlTag = 'html/tag',
-		HtmlAttribute = 'html/attr';
+		HtmlAttribute = 'html/attr',
+		HtmlAttributeExpression = 'html/attr-e';
 
 	private const Convertors = [
 		self::Text => [
@@ -154,7 +155,7 @@ final class Escaper
 
 	public function enterHtmlAttribute(?string $name, bool $expression = false): void
 	{
-		$this->state = self::HtmlAttribute;
+		$this->state = $expression ? self::HtmlAttributeExpression : self::HtmlAttribute;
 		$this->subType = '';
 
 		if ($this->contentType === ContentType::Html && is_string($name)) {
@@ -166,8 +167,9 @@ final class Escaper
 			} elseif ($expression && ((in_array($name, ['href', 'src', 'action', 'formaction'], true)
 				|| ($name === 'data' && strcasecmp($this->tag, 'object') === 0)))
 			) {
-				$this->subType = self::Url;
+				$this->subType = self::Url; // TODO: jen simple, jako AttributeUrl
 			}
+			// TODO: AttributeBool, AttributeList, AttributeData, AttributeAria
 		}
 	}
 
@@ -191,10 +193,15 @@ final class Escaper
 				self::HtmlText => 'LR\HtmlHelpers::escapeText(' . $str . ')',
 				self::HtmlTag => 'LR\HtmlHelpers::escapeTag(' . $str . ')',
 				self::HtmlAttribute => match ($this->subType) {
-					'',
-					self::Url => 'LR\HtmlHelpers::escapeAttr(' . $str . ')',
+					'' => 'LR\HtmlHelpers::escapeAttr(' . $str . ')',
 					self::JavaScript => 'LR\HtmlHelpers::escapeAttr(LR\Helpers::escapeJs(' . $str . '))',
 					self::Css => 'LR\HtmlHelpers::escapeAttr(LR\Helpers::escapeCss(' . $str . '))',
+				},
+				self::HtmlAttributeExpression => match ($this->subType) {
+					'',
+					self::Url => 'LR\HtmlHelpers::formatAttributeValue(' . $str . ')',
+					self::JavaScript => 'LR\HtmlHelpers::formatAttributeValue(LR\Helpers::escapeJs(' . $str . '))',
+					self::Css => 'LR\HtmlHelpers::formatAttributeValue(LR\Helpers::escapeCss(' . $str . '))',
 				},
 				self::HtmlComment => 'LR\HtmlHelpers::escapeComment(' . $str . ')',
 				self::HtmlBogusTag => 'LR\HtmlHelpers::escapeTag(' . $str . ')',
@@ -210,6 +217,7 @@ final class Escaper
 				self::HtmlText => 'LR\XmlHelpers::escapeText(' . $str . ')',
 				self::HtmlBogusTag => 'LR\XmlHelpers::escapeTag(' . $str . ')',
 				self::HtmlAttribute => 'LR\XmlHelpers::escapeAttr(' . $str . ')',
+				self::HtmlAttributeExpression => 'LR\XmlHelpers::formatAttributeValue(' . $str . ')',
 				self::HtmlComment => 'LR\HtmlHelpers::escapeComment(' . $str . ')',
 				self::HtmlTag => 'LR\XmlHelpers::escapeTag(' . $str . ')',
 				default => throw new \LogicException("Unknown context $this->contentType, $this->state."),
@@ -228,6 +236,7 @@ final class Escaper
 		return match ($this->contentType) {
 			ContentType::Html => match ($this->state) {
 				self::HtmlAttribute => "LR\\HtmlHelpers::escapeQuotes($str)",
+				self::HtmlAttributeExpression => "'\"' . LR\\HtmlHelpers::escapeQuotes($str) . '\"'",
 				self::HtmlRawText => match ($this->subType) {
 					self::HtmlText => 'LR\HtmlHelpers::convertHtmlToRawText(' . $str . ')',
 					default => "LR\\HtmlHelpers::convertJSToRawText($str)",
@@ -237,6 +246,7 @@ final class Escaper
 			},
 			ContentType::Xml => match ($this->state) {
 				self::HtmlAttribute => "LR\\HtmlHelpers::escapeQuotes($str)",
+				self::HtmlAttributeExpression => "'\"' . LR\\HtmlHelpers::escapeQuotes($str) . '\"'",
 				self::HtmlComment => throw new Latte\CompileException('Using |noescape is not allowed in this context.', $position),
 				default => $str,
 			},
@@ -256,7 +266,7 @@ final class Escaper
 
 	public function check(string $str): string
 	{
-		if ($this->state === self::HtmlAttribute && $this->subType === self::Url) {
+		if ($this->state === self::HtmlAttributeExpression && $this->subType === self::Url) {
 			$str = 'LR\Filters::safeUrl(' . $str . ')';
 		}
 		return $str;

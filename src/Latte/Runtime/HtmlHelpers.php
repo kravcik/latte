@@ -190,6 +190,12 @@ final class HtmlHelpers
 	}
 
 
+	public static function formatAttributeValue(mixed $value): string
+	{
+		return '"' . self::escapeAttr($value) . '"';
+	}
+
+
 	/**
 	 * Checks if the given tag name represents a void (empty) HTML element.
 	 */
